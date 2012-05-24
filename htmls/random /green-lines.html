@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>green lines</title>
+		<style type="text/css">
+			@import url(http://fonts.googleapis.com/css?family=Berkshire+Swash);
+			html,body,div {
+				margin: 0;
+				padding:0;
+				font-family: 'Berkshire Swash', serif;
+				
+				overflow: hidden;
+			}
+			#frame {
+				/*width: 500px;
+				height: 500px;
+				margin: 0 auto;
+				margin-top: 12px;
+				border: 2px solid #ccc;
+				padding: 12px;*/
+				width: 100%;
+				height: 100%;
+			}
+
+			
+
+			#sand {
+				
+				
+				margin: 0 auto;
+			}
+
+			h1 {
+				font-size: 76px;
+				font-weight: 300;
+				position: absolute;
+				bottom: 30px;
+				right: 120px;
+				text-shadow: 0 0 4px #080;
+				
+				
+
+			}
+			.smalltext {
+				font-size: 10px;
+				line-height: 11px;
+				position: absolute;
+				right: 0;
+				top: 84px;
+				font-family: 'Arial',sans-serif;
+			}
+
+			a {
+				color: #cfcfcf;
+				text-decoration: none;
+			}
+			a:hover {
+				color: #afafaf;
+			}
+			.output:first-child {
+				border: 0;
+			}
+
+		</style>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="frame">
+			<h1>green lines<span class="smalltext">a <a href="http://flarework.com">flarework.com</a> thing, 2012</span></h1>
+			<canvas id="sand" width="500" height="500"></canvas>
+		</div>
+		<script type="text/javascript">
+			var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+			document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+			</script>
+			<script type="text/javascript">
+			try{
+			if (window.location.hostname.indexOf('local') == -1) {
+				var pageTracker = _gat._getTracker("UA-24479305-1");
+				pageTracker._trackPageview();
+				} 
+			}catch(err) {console.log(err)}	
+			
+		</script>
+		<script type="text/javascript">
+
+			var app = {
+				pi: Math.PI,
+				r: Math.random,
+				m: Math,
+				init: function(){
+					var self = this;
+					this.count = 0;
+
+					this.$obj = $("#sand");
+					
+					
+
+
+					this.ctx = this.$obj[0].getContext('2d');
+					
+
+
+
+			 		self.factor = 1;
+			 		self.iter = self.osc(1,10,0.01);
+			 		
+			 		
+			 		this.reset();
+			 		$(window).bind('resize',function(){
+			 			self.reset();
+			 		});
+
+				},
+				reset: function(){
+					var self = this;
+
+					window.clearInterval(this.anim);
+
+					this.$obj.height($(window).height());
+					this.$obj.width($(window).width());
+
+					this.$obj.attr('height',$(window).height());
+					this.$obj.attr('width',$(window).width());
+
+					self.width  = this.$obj.width();
+			 		self.height = this.$obj.height();
+			 		
+			 		self.paths = [];
+			 		for (var i = 0; i < 10; i++) {
+			 			
+			 				var x = self.width/2;
+			 				var y = self.height/2;
+			 			
+			 			self.paths.push(new Path(x, y));
+			 		};
+			 		
+
+			 		this.anim = window.setInterval(this.draw,16)
+				},
+				clear: function(){
+					var self = this;
+					self.ctx.clearRect(0,0,self.width, self.height);
+				},
+				endAnim: function(){
+					window.clearInterval(this.anim);
+				},
+				fade: function(){
+					var self = this;
+					this.ctx.fillStyle = "rgba(255,255,255,0.01)";
+				    self.ctx.rect(0, 0, self.width, self.height);
+				    self.ctx.fill();
+				},
+				draw: function(){
+					//console.log('draw');
+					var self = app;
+					// self.fade();
+					self.factor = self.iter();
+
+					for (var i = 0; i < self.paths.length; i++) {
+						self.paths[i].updatePosition();
+					};
+					
+					
+					
+					
+					
+				},
+				osc: function(low, high, inc) {
+
+				    // basic test for illegal parameters
+				    if (low > high || inc < 0 ||  2 * (high - low) < inc) 
+				        return function() { return NaN; };
+
+				    var curr = low;
+				    return function() {
+				        var ret = curr;
+				        curr += inc;
+
+				        if (curr > high || curr < low) 
+				        {   
+				            curr = inc > 0 ? 2 * high - curr : 2 * low - curr;  
+				            inc = -inc;
+				        };
+
+				        return app.roundNumber(ret,2);
+				    }; 
+				},
+				
+				roundNumber:function(number, decimals) { // Arguments: number to round, number of decimal places
+
+			        if (!decimals) {decimals = 0;};
+
+			        var newnumber = new Number(number+'').toFixed(parseInt(decimals));
+			        return  parseFloat(newnumber); 
+			    }
+			}
+
+			function Path(startX, startY){
+				
+				// private vars
+				var centre 		= {x: startX, y: startY};
+				var a 			= app;
+				var ctx 		= a.$obj[0].getContext('2d');
+				var that 		= this;
+
+				var opacity		= a.roundNumber(a.r() * 0.5+0.5,1);
+				var green 		= a.r() * 256 << 0;
+				// var green 		= a.r() * 256 << 0;
+				// var blue 		= a.r() * 256 << 0;
+				var red 		= 0;
+				var blue 		= 0;
+				
+
+				// var startX 		= a.r() * startX*2;
+				// var startY 		= a.r() * startY*2;
+
+				var width		= a.roundNumber(a.r() * 2,2);
+				var lastaction 	= 'arc';
+				var angle  		= a.r()*2 * Math.PI; // start angle in rads
+				var distance 	= 0;
+				var direction 	= 1;
+				var lastdata	= {lastX: startX, lastY: startY};
+				var dist =0;
+				
+				ctx.save();
+				this.updatePosition = function(){
+					lastaction = (lastaction == 'arc') ? 'line' : 'arc';
+					direction = (direction > 0) ? -1 : 1;
+					switch (lastaction){
+						case 'arc':
+							
+							ctx.moveTo(lastdata.coords.lastX,lastdata.coords.lastY);
+							ctx.beginPath();
+							
+							ctx.strokeStyle = "rgba("+red+","+green+","+blue+","+opacity+")";
+							ctx.lineWidth = width;
+							
+							ctx.arc(centre.x,centre.y, distance, lastdata.angle, lastdata.angle_end);
+							ctx.stroke();
+							startX = startX+lastdata.coords.x2;
+							startY = startY+lastdata.coords.y2;
+							
+							break;
+								
+
+
+						case 'line':
+							dist = dist + a.r()*2 <<0; // bitshift floor magic!
+							distance += dist;
+
+							angle = a.r()*360 << 0;
+							angle = this.getAngle();
+							angle_end = this.getAngle() * 0.2;
+
+							// need to work out an angle here
+							var coords = {
+								lastX: startX,
+								lastY: startY,
+								x : dist * Math.cos(angle),
+           						y : dist * Math.sin(angle),
+           						x2 : dist *	Math.cos(angle_end),
+           						y2 : dist *	Math.sin(angle_end),
+							};
+           					ctx.moveTo(lastdata.lastX,lastdata.lastY);
+           					ctx.beginPath();
+							
+							ctx.strokeStyle = "rgba("+red+","+green+","+blue+","+opacity+")";
+							ctx.lineWidth = width;			
+							ctx.lineTo(startX+coords.x, startY+coords.y);
+							ctx.stroke();
+							
+							
+							
+							lastdata.coords = coords;
+							lastdata.angle = angle;
+							lastdata.angle_end = angle_end;
+
+							startX = startX+coords.x;
+							startY = startY+coords.y;
+							break;
+
+
+					}
+
+					return lastaction;
+				}
+
+				this.getAngle = function(){
+					return direction * (a.roundNumber( a.r()*2, 2 ) * Math.PI);
+				}
+
+
+				// is this needed?
+				return that;
+
+
+			}
+			
+			app.init();
+
+			
+		</script>
+	</body>
+</html>

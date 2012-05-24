@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>motion demo</title>
+		<style type="text/css">
+			#frame {
+				width: 200px;
+				height: 200px;
+				margin: 0 auto;
+				margin-top: 12px;
+				border: 2px solid #ccc;
+				padding: 12px;
+			}
+
+			.output {
+				width: 100%;
+				border-top: 1px solid #333;
+				display: none;
+			}
+
+			#sand {
+				border: 1px solid #ccc;
+				width: 200px;
+				height: 200px;
+				margin: 0 auto;
+			}
+
+
+			.output:first-child {
+				border: 0;
+			}
+
+		</style>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="frame">
+			<canvas id="sand" width="200" height="200"></canvas>
+			<div class="output" id="motion-x">123</div>
+			<div class="output" id="called">123</div>
+			<div class="output" id="raw">1231</div>
+		</div>
+		<script type="text/javascript">
+
+			var app = {
+				init: function(){
+					this.motionx = document.getElementById('motion-x');
+					this.called = document.getElementById('called');
+					this.motionz = document.getElementById('motion-z');
+					window.addEventListener('devicemotion',this.handler, false);
+					this.count = 0;
+					this.ctx = $("#sand")[0].getContext('2d');
+					this.setFill(100,100,100);
+					this.start();
+
+				},
+				start: function(){
+					var that = this;
+
+					this.interval = window.setInterval(function(){that.anim()},30);
+				},
+				setFill: function(r,g,b,a){
+					this.ctx.fillStyle = "rgba("+r+","+g+","+b+","+a+")";
+				},
+				dot: function(x,y){
+					this.ctx.fillRect(x,y,this.sizing,this.sizing);
+				},
+				rand: function(max){
+					return Math.floor(Math.random() * max);
+				},
+				anim: function(){
+					this.setFill(255,255,255,0.1);
+					this.ctx.fillRect(0,0,200,200);
+					for (var i = 0; i < this.motion; i++) {
+						this.setFill(this.rand(255),this.rand(255),this.rand(255),1)	
+						this.dot(this.rand(200),this.rand(200));
+					};
+				},
+				handler: function(e){
+					app.count++;
+					document.getElementById('raw').innerHTML = 'e:' + e;
+					if (e.accelerationIncludingGravity) {
+						var a = e.accelerationIncludingGravity;
+					};
+
+					var raw = "[" + Math.round(a.x) + ", " + Math.round(a.y) + ", " + Math.round(a.z) + "]";
+
+					app.motion = Math.abs(Math.floor(a.x));
+					app.sizing = Math.abs(Math.floor(a.z));
+					app.motionx.innerHTML = raw;
+					app.called.innerHTML = this.count;
+					// this.motiony.innerHTML = a.y;
+					// this.motionz.innerHTML = a.z;
+				}
+			}
+			
+			app.init();
+
+			
+		</script>
+	</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>motion demo</title>
+		<style type="text/css">
+			#frame {
+				width: 500px;
+				height: 500px;
+				margin: 0 auto;
+				margin-top: 12px;
+				border: 2px solid #ccc;
+				padding: 12px;
+			}
+
+			.output {
+				width: 100%;
+				border-top: 1px solid #333;
+				display: none;
+			}
+
+			#sand {
+				border: 1px solid #ccc;
+				width: 500px;
+				height: 500px;
+				margin: 0 auto;
+			}
+
+
+			.output:first-child {
+				border: 0;
+			}
+
+		</style>
+		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	</head>
+	<body>
+		<div id="frame">
+			<canvas id="sand" width="500" height="500"></canvas>
+			<div class="output" id="motion-x">123</div>
+			<div class="output" id="called">123</div>
+			<div class="output" id="raw">1231</div>
+		</div>
+		<script type="text/javascript">
+
+			var app = {
+				pi: Math.PI,
+				r: Math.random,
+				m: Math,
+				init: function(){
+					var self = this;
+					this.count = 0;
+					this.ctx = document.getElementById("sand").getContext('2d');
+					// this.setFill(100,100,100);
+					this.anim = window.setInterval(this.draw,16)
+			 		self.factor = 1;
+			 		self.iter = self.osc(1,10,0.01);
+			 		self.width = $("#sand").width();
+			 		self.height = $("#sand").height();
+				},
+				clear: function(){
+					var self = this;
+					self.ctx.clearRect(0,0,self.width, self.height);
+				},
+				fade: function(){
+					var self = this;
+					this.ctx.fillStyle = "rgba(255,255,255,0.5)";
+				    self.ctx.beginPath();
+				    self.ctx.rect(0, 0, self.width, self.height);
+				    self.ctx.closePath();
+				    self.ctx.fill();
+				},
+				draw: function(){
+					//console.log('draw');
+					var self = app;
+					self.fade();
+					self.factor = self.iter();
+					//console.log(self.factor)
+					for (i=0;i<40;i++){
+				      for(j=0;j<3;j++){
+				        self.ctx.beginPath();
+				        self.ctx.strokeStyle = "rgba(0,0,0,0.2)";
+				        var x          = 200 + i; //25+j*50;               // x coordinate
+				        var y          = 200 + j*2; //25+i*50;               // y coordinate
+				        var radius     = 60 * Math.log(i+self.factor);                    // Arc radius
+				        var startAngle = 0;                     // Starting point on circle
+				        var endAngle   = Math.PI+(Math.PI*j) /2 ; // End point on circle
+				        var clockwise  = i%2==0 ? false : true; // clockwise or anticlockwise
+				    
+				        self.ctx.arc(x,y,radius,startAngle,endAngle, clockwise);
+				    
+				        if (i>1){
+				          self.ctx.stroke();
+				        } else {
+				          self.ctx.stroke();
+				        }
+				      }
+					}
+					self.ctx.closePath();
+				},
+				osc: function(low, high, inc) {
+
+				    // basic test for illegal parameters
+				    if (low > high || inc < 0 ||  2 * (high - low) < inc) 
+				        return function() { return NaN; };
+
+				    var curr = low;
+				    return function() {
+				        var ret = curr;
+				        curr += inc;
+
+				        if (curr > high || curr < low) 
+				        {   
+				            curr = inc > 0 ? 2 * high - curr : 2 * low - curr;  
+				            inc = -inc;
+				        };
+
+				        return app.roundNumber(ret,4);
+				    }; 
+				},
+				roundNumber:function(number, decimals) { // Arguments: number to round, number of decimal places
+
+			        if (!decimals) {decimals = 0;};
+
+			        var newnumber = new Number(number+'').toFixed(parseInt(decimals));
+			        return  parseFloat(newnumber); 
+			    }
+			}
+			
+			app.init();
+
+			
+		</script>
+	</body>
+</html>
