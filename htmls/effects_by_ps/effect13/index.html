@@ -1,0 +1,54 @@
+<html>
+ <head>
+ <style>
+	* {
+	   padding: 0px;
+	   margin: 0px;
+	}
+	
+	body {
+		background-color: #f0f;
+	}
+	
+ 	#container {
+ 		padding: 25px;
+ 		width: 500px;
+ 		margin: auto;
+ 	}
+ 	
+ 	#board {
+ 	}
+ 	
+ 	#input {
+ 		border: 0px;
+ 		margin: 0px;
+ 		padding: 0px;
+ 		background-color: #00f;
+ 	}
+ 	
+ </style>
+  <script type="application/javascript">
+  
+	function submit() {
+		document.getElementById('board').innerHTML = 'clicked';
+		document.getElementById('input').value = '';
+	}
+	
+	/*document.onkeydown = function(evt) {
+		evt = evt || window.event;
+		//if (evt.ctrlKey && evt.keyCode == 90) {
+		//	alert("Ctrl-Z");
+		//}
+		document.getElementById('input').value = document.getElementById('input').value+evt.keyIdentifier;
+	
+	}
+*/
+  </script>
+ </head>
+ <body>
+ 	<div id="container">
+ 		<div id="board"></div>
+ 		<div>&gt; <input id="input" name="input" type="text" onkeydown="if (event.keyCode == 13) submit()"/>
+ 	</div>
+ </body>
+</html>
