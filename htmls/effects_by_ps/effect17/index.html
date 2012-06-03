@@ -1,0 +1,153 @@
+<html>
+ <head>
+  <script type="application/javascript">
+  
+  
+(function() {
+    var lastTime = 0;
+    var vendors = ['ms', 'moz', 'webkit', 'o'];
+    for(var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+        window.requestAnimationFrame = window[vendors[x]+'RequestAnimationFrame'];
+        window.cancelAnimationFrame = window[vendors[x]+'CancelAnimationFrame']
+                                   || window[vendors[x]+'CancelRequestAnimationFrame'];
+    }
+ 
+    if (!window.requestAnimationFrame)
+        window.requestAnimationFrame = function(callback, element) {
+            var currTime = new Date().getTime();
+            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+            var id = window.setTimeout(function() { callback(currTime + timeToCall); },
+              timeToCall);
+            lastTime = currTime + timeToCall;
+            return id;
+        };
+ 
+    if (!window.cancelAnimationFrame)
+        window.cancelAnimationFrame = function(id) {
+            clearTimeout(id);
+        };
+}());
+  
+function drawCanvas() {
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var w = ctx.width = 300;
+	var h = ctx.height = 300;
+
+	var columns = 10;
+	var lines = 10;
+
+	//var size = w/columns;
+	var walkers = [];
+	walkers[0] = Math.floor(Math.random()*columns*lines);
+	walkers[1] = Math.floor(Math.random()*columns*lines);
+	walkers[2] = Math.floor(Math.random()*columns*lines);
+	
+	var states = [];
+	for(i=0;i<columns;i++) {
+		for(j=0;j<lines;j++) {
+			states[i+j*columns] = Math.floor(Math.random()*3);
+		}
+	}
+	
+	var renderToCanvas = function (width, height, renderFunction) {
+		var buffer = document.createElement('canvas');
+		buffer.width = width;
+		buffer.height = height;
+		renderFunction(buffer.getContext('2d'));
+		return buffer;
+	};
+
+	function drawThis() {
+		
+		var d = new Date();
+		var timer = d.getTime();
+		
+		var cached = renderToCanvas(w,h, function (ctx) {
+		
+			columns = 10;
+			lines = 10;
+			
+			var colwidth = w/columns;
+			var linspace = h/lines;
+			size = colwidth;
+			
+			color2 = "rgba(255,0,0,1.0)";
+			
+			ctx.strokeStyle = color2;
+			ctx.fillStyle = color2;
+			for(i=0;i<columns;i++) {
+				for(j=0;j<lines;j++) {
+					var floatingx = colwidth*i;
+					var floatingy = linspace*j;
+					var halfsize = size*.5;
+					switch(states[i+j*columns]) {
+						case 0:
+							ctx.strokeStyle = "rgba(0,0,0,1)";
+							ctx.lineWidth = 2;
+							ctx.beginPath();
+							ctx.moveTo(floatingx-halfsize, floatingy-halfsize);	
+							ctx.lineTo(floatingx+halfsize, floatingy+halfsize);
+							ctx.stroke();
+						break;
+						case 1:
+							ctx.strokeStyle = "rgba(0,0,255,1)";
+							ctx.lineWidth = 2;
+							ctx.beginPath();
+							ctx.moveTo(floatingx+halfsize, floatingy-halfsize);	
+							ctx.lineTo(floatingx-halfsize, floatingy+halfsize);
+							ctx.stroke();
+						break;
+						case 2:
+							ctx.strokeStyle = "rgba(0,0,0,1)";
+							ctx.lineWidth = 4;
+							ctx.beginPath();
+							ctx.moveTo(floatingx-halfsize, floatingy-halfsize);	
+							ctx.lineTo(floatingx+halfsize, floatingy+halfsize);
+							ctx.stroke();
+						break;
+						case 3:
+							ctx.strokeStyle = "rgba(0,0,0,1)";
+							ctx.lineWidth = 2;
+							ctx.beginPath();
+							ctx.moveTo(floatingx-halfsize, floatingy-halfsize);	
+							ctx.lineTo(floatingx+halfsize, floatingy+halfsize);
+							ctx.stroke();
+						break;
+					}
+				}
+			}
+			
+		});
+
+		ctx.clearRect(0,0,w,h);
+
+		ctx.drawImage(cached, 0, 0);
+	}
+	
+	(loop = function() {
+		requestAnimationFrame(loop);
+		drawThis();
+		//setTimeout(loop,20);
+	})();
+	
+	(walk = function() {
+		walkers[0]++;
+		console.log(walkers.length);
+		for(var i=0; i<walkers.length; i++) {
+			walkers[i]++;
+			if (walkers[i]>columns*lines) walkers[i] = 0;
+			states[walkers[i]] = Math.floor(Math.random()*3);
+		}
+
+		setTimeout(walk,200);
+	})();
+
+}
+  </script>
+ </head>
+ <body onload="drawCanvas()">
+   <canvas id="canvas" width="300" height="300"></canvas>
+ </body>
+</html>
