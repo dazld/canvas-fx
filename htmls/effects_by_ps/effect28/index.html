@@ -1,0 +1,160 @@
+<html>
+ <head>
+  <script type="application/javascript">
+
+
+rand = function(n){
+	return Math.floor(Math.random()*n);
+};
+  
+function Ants(x,y,vx,vy,acc){
+	this.x = x;
+	this.y = y;
+	this.vx = vx;
+	this.vy = vy;
+	this.acc = acc;
+	this.maxspeed = 10;
+	this.radius = 50;
+	
+	this.heading = function() {
+		return -1 * Math.atan2(-1 * this.vy, this.vx) + Math.PI*1.5;
+	}
+	
+	this.update = function(dist,vx,vy,w,h) {
+		if (dist < this.radius) {
+			//this.vx = (this.vx*.5 + vx*.25) + this.acc*.025;
+			this.vx = (this.vx + vx)*.5 + this.acc*.025;
+			if (this.vx > this.maxspeed) this.vx = this.maxspeed;
+			
+			//this.vy = (this.vy*.5 + vy*.25) + this.acc*.025;
+			this.vy = (this.vy + vy)*.5 + this.acc*.025;
+			if (this.vy > this.maxspeed) this.vy = this.maxspeed;
+		}
+				
+		if (this.x > w) {
+			this.x -= w;
+		}
+		if (this.x < 0) {
+			this.x += w;
+		}
+		if (this.y > h) {
+			this.y -= h;
+		}
+		if (this.y < 0) {
+			this.y += h;
+		}
+		
+	}
+}
+
+function drawCanvas() {
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var w = ctx.width = 600;
+	var h = ctx.height = 600;
+	
+	ctx.shadowOffsetX = 5;
+	ctx.shadowOffsetY = 5;
+	ctx.shadowColor = 'rgba(0,0,0,0.2)';
+	
+	var num = 200;
+	var angle = (Math.PI*2)/num;
+	var size = 10;
+	var opening, phase1, phase2;
+	
+	var ants = [];
+	
+	for (var i=0; i<num; i++) {
+		ants[i] = new Ants( rand(w), rand(h),
+							Math.random()*3-1.0, Math.random()*3-1.0,
+							Math.random()*3-1.0);
+	}
+	
+	var windx = -1.0;
+	var windy = 1.0;
+
+	function drawThis() {
+		var d = new Date();
+		var timer = d.getTime();
+		
+		color = "rgba(200,0,0,0.2)";
+		ctx.fillStyle = color;
+	
+		for (var i=0; i<num; i++) {
+			
+				//update
+				ants[i].x += ants[i].vx;
+				ants[i].y += ants[i].vy;
+				
+				//find closest neighbour, align dirs with them
+				var cl = 0;
+				var subx = (ants[i].x-ants[0].x);
+				var suby = (ants[i].y-ants[0].y);
+				var dist = Math.sqrt(subx*subx+suby*suby);
+
+				var avgx = 0;
+				var avgy = 0;
+				var avgc = 0;
+
+				for (var j=0; j<num; j++) {
+					if (i!=j) {
+						subx = (ants[i].x-ants[j].x);
+						suby = (ants[i].y-ants[j].y);
+						var thisdist = Math.sqrt(subx*subx+suby*suby);
+						//console.log("thisdist"+j+": "+thisdist);
+	
+						//within radius, keep track of average
+						if (thisdist < ants[i].radius) {
+							avgx += ants[j].vx;
+							avgy += ants[j].vy;
+							avgc++;
+						}
+						
+						//closest
+						if (thisdist < dist) {
+							dist = thisdist;
+							cl = j;
+						}
+					}
+				}
+				
+				//follow closest
+				if (avgc < 2) {
+					ants[i].update(dist,ants[cl].vx,ants[cl].vy,w,h);
+				} else {
+					avgx += windx*Math.sin(timer/5000);
+					avgy += windy*Math.sin(timer/500)*Math.sin(timer/1000);
+					avgc++;
+				}
+				//follow average of within radius
+				ants[i].update(dist,avgx/avgc,avgy/avgc,w,h);
+
+
+				//draw
+				ctx.save();
+				ctx.translate( ants[i].x, ants[i].y );
+				ctx.rotate(ants[i].heading());
+				ctx.beginPath();
+				ctx.moveTo(-size*.5,-size*.5);
+				ctx.lineTo(0,size);
+				ctx.lineTo(size*.5,-size*.5);
+				//ctx.lineTo(size*.5,size/2*Math.sqrt(3));
+				ctx.fill();
+				ctx.closePath();
+				ctx.restore();
+		}
+	}
+	
+	(loop = function() {
+		//ctx.clearRect(0,0,w,h);
+		drawThis();
+		setTimeout(loop,20);
+	})()
+}
+  </script>
+ </head>
+ <body onload="drawCanvas()">
+   <canvas id="canvas" width="600" height="600"></canvas>
+ </body>
+</html>

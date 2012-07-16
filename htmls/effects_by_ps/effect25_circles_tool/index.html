@@ -1,0 +1,206 @@
+<html>
+ <head>
+  <script type="application/javascript">
+
+//todo: if next layer of stack doesnt have radius or color or blendtype then use previous
+//todo: on edit textarea return transform json into layers array
+//todo: colorwheel
+//todo: blendtypes
+
+var offsetLeft, offsetTop, posX, posY, radius, color;
+
+var layersJSON;
+var layers = new Array();
+
+var layer = function()
+{
+	var posX, posY, radius, color;
+	
+	this.init = function(x,y,r,c) {
+		this.posX = x;
+		this.posY = y;
+		this.radius = r;
+		this.color = c;
+	}
+}
+
+//var layer = new layer();
+
+document.onmousemove = function(e) {
+	posX = e.pageX - offsetLeft;
+	posY = e.pageY - offsetTop;
+	//document.getElementById('textarea').innerHTML = posX;
+	return true;
+}
+
+document.onkeydown = function(e) {
+	//document.getElementById('textarea').innerHTML = e.which+'\n';
+
+	switch (e.which) {
+		case 49: //1
+			updateColor('color1');
+		break;
+		case 50: //2
+			updateColor('color2');
+		break;
+		case 51: //3
+			updateColor('color3');
+		break;
+		case 52: //4
+			updateColor('color4');
+		break;
+		case 53: //5
+			updateColor('color5');
+		break;
+		case 54: //6
+		break;
+		case 55: //7
+		break;
+		case 56: //8
+		break;
+		case 57: //9
+		break;
+		case 48: //0
+			var string = '[[69,140,20,"#FF0000"],[142,157,20,"#FF0000"],[241,204,20,"#FF0000"],[384,121,20,"#FF0000"],[186,86,20,"#FF0000"]]';
+			var tarray = JSON.parse(string);
+			layers = new Array();
+			for (var i = 0; i < tarray.length; i++) {
+				posX = tarray[i][0];
+				posY = tarray[i][1];
+				radius = tarray[i][2];
+				color = tarray[i][3];
+				addLayer();
+			}
+			
+		break;		
+		case 187: //+
+			radius++;
+		break;
+		case 189: //-
+			radius--;
+			if (radius < 2) radius = 2;
+		break;
+		case 87: //w
+			radius += 5;
+		break;
+		case 83: //s
+			radius -= 5;
+			if (radius < 2) radius = 2;
+		break;
+		case 65: //a
+			radius--;
+			if (radius < 2) radius = 2;
+		break;
+		case 68: //d
+			radius++;
+		break;
+		case 32: //space
+			addLayer();
+		break;
+		case 90: //z
+			removeLayer();
+			//var string = '{0:[195,286,20,#FF0000],1:[228,286,20,#FF0000],2:[238,283,20,#FF0000],3:[233,289,20,#FF0000],4:[233,289,20,#FF0000],}';
+			//(1,eval)('layers = 2;');//string);
+			//console.log(layers);
+		break;
+	}
+
+}
+
+function addLayer() {
+	var newlayer = new layer();
+	newlayer.init(posX,posY,radius,color);
+	layers.push(newlayer);
+	printLayersStruct();
+}
+
+function removeLayer() {
+	layers.pop();
+	printLayersStruct();
+}
+
+function printLayersStruct() {
+	var textout = '[\n';
+	var textout2 = '[';
+	for(var i=0; i<layers.length;i++) {
+		textout += '['+layers[i].posX+','+layers[i].posY+','+layers[i].radius+',"'+layers[i].color+'"]';
+		textout2 += '['+layers[i].posX+','+layers[i].posY+','+layers[i].radius+',"'+layers[i].color+'"]';
+		if (i!=layers.length-1) {
+			textout+=',';
+			textout2+=',';
+		}
+		textout+='\n';
+	}
+	textout+=']';
+	textout2+=']';
+	
+	document.getElementById('textarea').innerHTML = textout;
+	document.getElementById('textarea2').innerHTML = textout2;
+}
+
+function drawCanvas() {
+
+	canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var w = ctx.width = 500;
+	var h = ctx.height = 500;
+	
+	offsetLeft = canvas.offsetLeft;
+	offsetTop = canvas.offsetTop;
+
+	radius = 20;
+	color = "#FF0000";
+
+	
+	canvas.onclick = function(e) {
+		addLayer();
+	}
+
+	function drawThis() {
+	
+		//layers stack
+		for(var i=0; i<layers.length;i++) {
+			ctx.fillStyle = layers[i].color;
+			ctx.beginPath();
+			ctx.arc(layers[i].posX,layers[i].posY,layers[i].radius,0,Math.PI*2,true);
+			ctx.closePath();
+			ctx.fill();
+		}
+		
+		//cursor		
+		ctx.fillStyle=color;
+		ctx.beginPath();
+		ctx.arc(posX,posY,radius,0,Math.PI*2,true);
+		ctx.closePath();
+		ctx.fill();
+	}
+	
+	(loop = function() {
+		ctx.clearRect(0,0,w,h);
+		drawThis();
+		setTimeout(loop,20);
+	})()
+}
+
+
+function updateColor(thiscolor) {
+	var dom = document.getElementById(thiscolor);
+	dom.style.background = dom.value;
+	color = dom.value;
+}
+
+  </script>
+ </head>
+ <body style="background:#000" onload="drawCanvas()">
+   <canvas id="canvas" style="background:#fff" width="500" height="500"></canvas>
+   <br>
+   <input id="color1" type="text" value="#f00" onkeydown="updateColor('color1')">
+   <input id="color2" type="text" value="#000" onkeydown="updateColor('color2')">
+   <input id="color3" type="text" value="#fff" onkeydown="updateColor('color3')">
+   <input id="color4" type="text" value="#00f" onkeydown="updateColor('color4')">
+   <input id="color5" type="text" value="#f00" onkeydown="updateColor('color5')">
+   <br><br>
+   <textarea id="textarea" style="width: 100%; height: 200px">hello world</textarea>
+   <textarea id="textarea2">hello world</textarea>
+ </body>
+</html>
