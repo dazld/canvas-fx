@@ -1,4 +1,7 @@
 canvas-fx
 =========
 
-Varied tests and experiments with canvas and JS
+Demos and playtime with canvas and JavaScript.
+
+
+

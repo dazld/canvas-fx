@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<!--
+	hacked from http://slides.html5rocks.com/
+	by ps
+	for Javascript Canvas Audiovisual Light and Magic
+	Codebits 2012 talk
+	
+	This talk will be about lessons learned through that process. Showcasing the projects,
+	explaining the technology choices, alternatives, pros and cons.
+
+	It will swifty mention javascript, processingjs, webgl, html5, canvas element,
+	realtime sound synthesis, emulators, size optimization, html5 on mobiles, demoscene,
+	creative coding, closure compiler, png compressors
+	and the benefits of using parsley in your cooking.
+-->
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge;chrome=1" />
+    <title>Javascript Canvas Audiovisual Light and Magic</title>
+    <link href="http://fonts.googleapis.com/css?family=Droid+Sans|Droid+Sans+Mono" rel="stylesheet" type="text/css" />
+    <link id="prettify-link" href="src/prettify/prettify.css" rel="stylesheet" disabled />
+    <link href="css/moon.css" class="theme" rel="stylesheet" />
+    <link href="css/sand.css" class="theme" rel="stylesheet" />
+    <link href="css/sea_wave.css" class="theme" rel="stylesheet" />
+    <link href="css/default.css" class="theme" rel="stylesheet" media="screen" />
+    <script src="js/tagcanvas.min.js" type="text/javascript"></script>
+  </head>
+  <body>
+    <div class="presentation">
+      <div id="presentation-counter">Loading forever?...</div>
+      <div class="slides">
+
+        <div class="slide" id="landing-slide">
+          <style>
+            #landing-slide p {
+              font-size: 35px;
+            }
+          </style>
+          <section class="middle">
+            <p>Javascript Canvas<br>Audiovisual Light & Magic</p>
+            <h3><a href="http://tpolm.org/~ps">Filipe Cruz</a></h3>
+            <h3><a href="http://twitter.com/danpeddle">Dan Peddle</a></h3>
+          </section>
+          <aside class="note">
+            <section>
+              Welcome! (This field is for presenter notes and commentary.)
+            </section>
+          </aside> 
+        </div>
+
+      <div class="slide" id="menu">
+          <header><h1>ON THE MENU</h1></header>
+          <style>
+            #menu p {
+              font-size: 26px;
+              line-height: 33px;
+              opacity: 0.85;
+            }
+          </style>
+          <section class="middle">
+            <p>javascript, processingjs, webgl, html5</p>
+            <p>canvas element, realtime sound synthesis, emulators</p>
+            <p>size optimization, html5 on mobiles</p>
+            <p>demoscene, creative coding, closure compiler, png compressors</p>
+            <p>and the benefits of using parsley in your cooking.</p>
+          </section>
+       </div>
+
+        <div class="slide">
+         <header><h1>OPEN SEASON</h1></header>
+          <section class="middle">
+            <p>feel free to interrupt for questions</p>
+          </section> 
+        </div>
+
+       <div class="slide" id="introduction">
+          <header><h1>WHOIS...</h1></header>
+          <style>
+            #introduction li {
+              font-size: 26px;
+              line-height: 33px;
+              opacity: 0.85;
+            }
+        	#introduction h3 {
+              font-size: 26px;
+              line-height: 33px;
+            }
+          </style>
+          <section>
+          	<h3>Filipe</h3>
+            <ul>
+            <li>MSc Informatics Engineer from Portugal</li>
+            <li>Media artist of sorts</li>
+            <li>Freelance software developer</li>
+            </ul>
+          </section>
+       </div>
+
+       <div class="slide" id="introduction2">
+          <header><h1>WHOIS...</h1></header>
+          <style>
+            #introduction2 li {
+              font-size: 26px;
+              line-height: 33px;
+              opacity: 0.85;
+            }
+            #introduction2 h3 {
+              font-size: 26px;
+              line-height: 33px;
+            }
+          </style>
+          <section>
+          	<h3>Dan</h3>
+            <ul>
+            <li>From UK, emigrated to Portugal</li>
+            <li>Worked as a Sound Engineer before discovering &lt;3 for the web</li>
+            <li>Freelancer with JS and front-end focus</li>
+            </ul>
+          </section>
+       </div>
+      
+        <div class="slide">
+          <header><h1>2002</h1></header>
+          <section class="middle">
+    			<p><img width="60%" src="data/machineview.jpg"></p>
+    			<p>Experimental music with buzz</p>
+          </section>
+       </div>
+
+      <!--  <div class="slide">
+          <header><h1>2008</h1></header>
+          <section class="middle">
+			<p><img width="60%" src="data/stfu_cartaz2-jpn.jpg"></p>
+			<p>STFU Porto</p>
+          </section>
+       </div>-->
+
+        <div class="slide">
+          <header><h1>2012</h1></header>
+          <section class="middle">
+			<p><img height="60%" src="data/id_logo.png"></p>
+			<p>inércia Demoparty</p>
+          </section>
+       </div>
+       <div class="slide">
+          <header><h1>Hello codebits!</h1></header>
+          <section class="middle">
+            <style type="text/css">
+            @keyframes myfirst
+            {
+              0%   {-webkit-transform: rotate(0deg)}
+              50%   {-webkit-transform: rotate(180deg)}
+              100%   {-webkit-transform: rotate(0deg)}
+            }
+
+
+
+            @-webkit-keyframes myfirst /* Safari and Chrome */
+            {
+              0%   {-webkit-transform: rotate(0deg)}
+              50%   {-webkit-transform: rotate(180deg)}
+              100%   {-webkit-transform: rotate(360deg)}
+            }
+
+            #bombs {
+              position: relative;
+              z-index: 1;
+              -webkit-animation-name: myfirst;
+              -webkit-animation-duration: 5s;
+              -webkit-animation-timing-function: linear;
+              -webkit-animation-delay: 2s;
+              -webkit-animation-iteration-count: infinite;
+              
+              -webkit-animation-play-state: running;
+            }
+            </style>
+            <img src="images/bombs.png" id="bombs">
+            <p style="position: relative; z-index:2;">First time for everything!</p>
+          </section>
+       </div>
+        <div class="slide" style="">
+         <header><h1>Why use this?</h1></header>
+         <section class="">
+           <p>JS is a dynamic language with minimal boilerplate (bugs a gogo!)</p>
+           <p>In a browser context, lives in the DOM, which has an incredibly rich presentation and input API</p>
+           <p>"F5" = see your result</p>
+           <p>2012 browsers are <strong>rocket powered fire breathing monsters</strong> compared to just a few years ago</p>
+           <p>The DOM's API is constantly being extended with new features</p>
+           <p>It's ubiquitous - your audience is the world</p>
+         </section>
+       </div>
+       
+       <div class="slide">
+         <header><h1>Approach</h1></header>
+         <section class="">
+           <ul>
+             <li>Sketch ideas on paper</li>
+             <li>Easy to visualise code, and importantly code patterns, as graphics</li>
+             <li>Many, many tricks to get visually appealing stuff going quickly (hue and saturation color models, transparency, trig, random numbers, noise, symmetry)</li>
+             <li>We <strong>interpret</strong> what our senses are telling us - psychoacoustics in audio, not sure what equivalent is in vision, but same concept - we instinctively look for patterns</li>
+           
+           </ul>
+         </section>
+       </div>
+       <div class="slide">
+         <header><h1>Before we go any further..</h1></header>
+         <section class="middle">
+           <p>Everyone in this room is better at maths than me :D</p>
+         </section>
+       </div>
+       <div class="slide">
+         <header><h1>First demo</h1></header>
+         <section class="middle">
+          <p>Let's make hundreds of cubes and animate them!</p>
+          <p><img src="images/cubes1.png" width="700" /></p>
+         </section>
+       </div>
+        <div class="slide">
+          <header><h1>Second demo</h1></header>
+          <section class="middle">
+		        <p>Particles are pretty fun</p>
+            <p><img src="images/toot.png" width="700" /></p>
+            <p>Can use multiple canvas elements in a page</p>
+          </section>
+       </div>
+        <div class="slide">
+          <header><h1>Let's go crazy</h1></header>
+          <section class="middle">
+            <p>How far can we push this?</p>
+            <p><img src="images/manycubes.png" width="700" /></p>
+          </section>
+       </div>
+       <div class="slide">
+          <header><h1>Keep it snappy</h1></header>
+          <section class="middle">
+            <p>Threads (in the form of web workers) to the rescue</p>
+            <p><img src="images/webcam.png" height="450" /></p>
+          </section>
+       </div>
+        <div class="slide">
+          <header></header>
+          <section class="middle">
+            <p>Thank you for watching, over to Filipe!</p>
+          
+            
+          </section>
+       </div>
+        <div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>Where to start?</p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>Demo or die!</p>
+			<p>You don't actually need to die...</p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>Code every single day</p>
+			<p>Even if it's just 15 minutes</p>
+          </section>
+       </div>
+       
+    	<div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>Focus on putting something moving on the screen</p>
+			<p>Your mega engine will come later</p>
+          </section>
+       </div>
+
+    	<div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>OOP and Software Design Patterns?</p>
+			<p>"Fuck that shit!"</p>
+			<p>"Just KISS it!"</p>
+			<p>Keep It Simple, Stupid</p>
+          </section>
+       </div>
+
+    	<div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>1) When in doubt, do a new effect</p>
+			<p>(the more effects available the better)</p>
+			<p>(<a href="data/HTML5_Canvas_Cheat_Sheet.png">HTML5 cheat sheet</a> is your friend)</p>
+          </section>
+       </div>
+
+    	<div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>2) Get a soundtrack that brings stuff together</p>
+			<p>(don't settle for crap sounds, even if your code is crap)</p>
+          </section>
+       </div>
+
+    	<div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>3) Don't let the coder pick the colorscheme</p>
+			<p>(god invented graphic designers for a reason, use them)</p>
+			<p>(if you dont have a graphics designer: <a href="http://www.colourlovers.com/">1</a> <a href="http://kuler.adobe.com">2</a>)</p>
+          </section>
+       </div>
+
+    	<div class="slide">
+          <header><h1>HOW TO DEMO</h1></header>
+          <section class="middle">
+			<p>4) Set a realistic deadline and meet it</p>
+			<p>(Sure you could do the best engine ever, in 5 years)</p>
+			<p>(Releasing stuff is motivating, use it in your favor)</p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1></h1></header>
+          <section class="middle">
+			<p>The potential of Javascript Canvas</p>
+          </section>
+       </div>
+              
+        <div class="slide">
+          <header><h1></h1></header>
+          <section class="middle">
+			<p><a href="https://github.com/dazld/canvas-fx">https://github.com/dazld/canvas-fx</a></p>
+          </section>
+          <aside class="note">
+            <section>
+              show dan's effects, show mine, let dan rant on oop
+            </section>
+          </aside>
+       </div>
+
+        <div class="slide">
+          <header><h1></h1></header>
+          <section class="middle">
+			<p>Filipe's earlier experiments</p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>HTML5 WEBVIEW</h1></header>
+          <section class="middle">
+			<p><a href="tpolm-babydemo/index.html">Baby Demo</a> @ Stream 2011</p>
+			<p>Failed Android webview HTML5 benchmark test demo</p>
+          </section>
+          <aside class="note">
+            <section>
+              android sucks with canvas<br>
+              dan's clock looks neat on ipad<br>
+            </section>
+          </aside>
+        </div>
+        
+        <div class="slide">
+          <header><h1>WEBGL</h1></header>
+          <section class="middle">
+			<!--<p><a href="http://www.tpolm.org/~ps/fxm_-_blind_serpent/">Blind Serpent</a> @ The Flame Party Helsinki 2011</p>-->
+			<p><a href="fxm_-_blind_serpent/index.html">Blind Serpent</a> @ The Flame Party Helsinki 2011</p>
+			<p>WebGL remix</p>
+          </section>
+          <aside class="note">
+            <section>
+              webgl very specific browser and hardware requirements<br>
+              incomplete opengl implementation<br>
+              three.js
+            </section>
+          </aside>
+        </div>
+        
+        <div class="slide">
+          <header><h1>PROCESSINGJS</h1></header>
+          <section class="middle">
+			<!--<p><a href="http://www.tpolm.org/~ps/minimalartifact_-_pgen/index.html">pgen</a> @ Assembly 2011</p>-->
+			<p><a href="minimalartifact_-_pgen/index.html">pgen</a> @ Assembly 2011</p>
+			<p>ProcessingJS generative art slideshow</p>
+          </section>
+          <aside class="note">
+            <section>
+              paperjs
+            </section>
+          </aside>
+        </div>
+
+        <div class="slide">
+          <header><h1>HTML5 HACKING</h1></header>
+          <section class="middle">
+			<!--<p><a href="http://www.tpolm.org/~ps/shogun_neophyte/index.html">shogun neophyte</a> @ LGRU 2011</p>-->
+			<p><a href="shogun_neophyte/index.html">shogun neophyte</a> @ LGRU 2011</p>
+			<p>javascript animation using comic creator tool by <a href="http://www.kesiev.com">kesiev</a></p>
+          </section>
+          <aside class="note">
+            <section>
+              animation: raphael, kineticjs, box2d<br>
+              game development: akihabara, impactjs<br>
+            </section>
+          </aside>
+        </div>
+
+        <div class="slide">
+          <header><h1>JS1K</h1></header>
+          <section class="middle">
+			<p><a href="http://js1k.com/2012-love/demo/1092">Spreading Love Liebe Amor</a> @ JS1K Love 2012</p>
+          </section>
+        </div>   
+
+        <div class="slide">
+          <header><h1>Cyboman 5</h1></header>
+          <section class="middle">
+			<p><a href="">Cyboman 5</a> 4k @ Stream 2012</p>
+			<p><a href="http://www.tpolm.org/herring/?p=410">making of article</a></p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>Cyboman 5</h1></header>
+          <section class="middle">
+			<p>code some new effects</p>
+          </section>
+       </div>
+       
+        <div class="slide">
+          <header><h1>Cyboman 5</h1></header>
+          <section class="middle">
+          	<p>bytesize music</p>
+          	<p><a href="http://countercomplex.blogspot.fi/2011/10/algorithmic-symphonies-from-one-line-of.html">http://countercomplex.blogspot.com</a></p>
+          	<p><a href="http://pouet.net/topic.php?which=8357">http://pouet.net/topic.php?which=8357</a></p>
+			<p><a href="http://wurstcaptures.untergrund.net/music/">http://wurstcaptures.untergrund.net/music/</a></p>
+          </section>
+       </div>
+  
+       <div class="slide">
+          <header><h1>Cyboman 5</h1></header>
+          <section class="middle">
+          	<p>javascript 1k speech synth</p>
+          	<p><a href="http://www.p01.org/releases/JS1K_Speech_Synthesizer/">http://www.p01.org/releases/JS1K_Speech_Synthesizer/</a></p>
+          </section>
+       </div>
+
+       <div class="slide">
+          <header><h1>Cyboman 5</h1></header>
+          <section class="middle">
+          	<p>16k original.js</p>
+          	<p>12k <a href="http://marijnhaverbeke.nl/uglifyjs">UglifyJS</a> min.js</p>
+          	<p>4k <a href="https://gist.github.com/2560551">PNGinator</a> final.html</p>
+          </section>
+       </div>
+
+       <div class="slide">
+          <header><h1>Javascript Compression</h1></header>
+          <section class="middle">
+          	<p>better then UglifyJS:</p>
+          	<p><a href="http://js1k.com/2012-love/demo/1127">crush on js</a></p>
+          	<p><a href="https://developers.google.com/closure/compiler/">closure compiler</a></p>
+          </section>
+       </div>
+ 
+        <div class="slide">
+          <header><h1>Javascript Compression</h1></header>
+          <section class="middle">
+          	<p>better then PNGinator:</p>
+          	<p><a href="http://pouet.net/prod.php?which=59298">JsExe</a></p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>Javascript Compression</h1></header>
+          <section class="middle">
+          	<p><a href="http://vimeo.com/43335760">Creative Coding and Size Optimization</a></p>
+          	<p><a href="http://pouet.net/topic.php?which=8770">JS performance</a></p>
+          </section>
+       </div>
+       
+       <div class="slide">
+          <header><h1>Under a Seering Sky</h1></header>
+          <section class="middle">
+          	<p>sci-fi web book game</p>
+          	<p><a href="http://enoughrecords.scene.org/uass">http://enoughrecords.scene.org/uass</a></p>
+          	<p><a href="http://audienciazero.net/xda/2012/06/20/making-of-under-a-seering-sky/">making of article</a></p>
+          </section>
+       </div>       
+       
+       <div class="slide">
+          <header><h1>Under a Seering Sky</h1></header>
+          <section class="middle">
+          	<p>imposed myself a deadline</p>
+          	<p>(demoparty accepting IF entries in 2 months)</p>
+          </section>
+       </div>       
+
+       <div class="slide">
+          <header><h1>Under a Seering Sky</h1></header>
+          <section class="middle">
+          	<p>started writing storyline</p>
+          	<p>(based on unpublished sci fi novel i had written months before)
+          </section>
+       </div> 
+
+       <div class="slide">
+          <header><h1>Under a Seering Sky</h1></header>
+          <section class="middle">
+          	<p>re-structured storyline and re-engineered engine</p>
+          	<p>(after chapter 1 was half-way done)
+          </section>
+       </div> 
+
+       <div class="slide">
+          <header><h1>Under a Seering Sky</h1></header>
+          <section class="middle">
+          	<p>added audio support (tracks taken from my netlabel)</p>
+          	<p>adapted effects to match project</p>
+          	<p>bothered graphician friends for some graphics</p>
+          </section>
+       </div> 
+       
+       <div class="slide">
+          <header><h1>Under a Seering Sky</h1></header>
+          <section class="middle">
+          	<p>polished chapter 1</p>
+          	<p>finished chapter 2</p>
+          	<p>beta tested</p>
+          </section>
+       </div> 
+
+       <div class="slide">
+          <header><h1>Under a Seering Sky</h1></header>
+          <section class="middle">
+          	<p>polish until deadline</p>
+          </section>
+       </div>
+
+       <div class="slide">
+          <header><h1>HTML5 on Mobiles</h1></header>
+          <section class="middle">
+          	<p>&lt;audio&gt; problems cross-fading</p>
+          	<p>variable resolutions</p>
+          	<p>button drag/tap problems</p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>Parsley State</h1></header>
+          <section class="middle">
+			<p>10k for DemoJS 2012</p>
+			<p><a href="http://www.tpolm.org/herring/?p=413">making of article</a></p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>Parsley State</h1></header>
+          <section class="middle">
+			<p>code some new effects</p>
+          </section>
+       </div>
+
+        <div class="slide" id="soptions">
+          <style>
+            #soptions li {
+              font-size: 26px;
+              line-height: 33px;
+              opacity: 0.85;
+            }
+        	#soptions h3 {
+              font-size: 26px;
+              line-height: 33px;
+            }
+          </style>
+          <header><h1>Parsley State</h1></header>
+          <section class="middle">
+          	<p>soundtrack options:</p>
+          	<ul>
+          	<li>bytecode music (like in Cyboman 5)</li>
+          	<li><a href="http://sonantlive.bitsnbites.eu/">sonant-js</a></li>
+			<li><a href="http://www.pouet.net/prod.php?which=58260">ahx replayer</a></li>
+			<li><a href="http://matt.west.co.tt/music/jsmodplayer/">js mod player</a></li>
+			</ul>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>Parsley State</h1></header>
+          <section class="middle">
+          	<p>requestAnimationFrame</p>
+          </section>
+       </div>
+
+        <div class="slide">
+          <header><h1>Parsley State</h1></header>
+          <section class="middle">
+          	<p>off-screen rendering</p>
+          	<p>compositing</p>
+          </section>
+       </div>
+                
+       <div class="slide" id="psoptions">
+          <style>
+            #psoptions li {
+              font-size: 26px;
+              line-height: 33px;
+              opacity: 0.85;
+            }
+        	#psoptions h3 {
+              font-size: 26px;
+              line-height: 33px;
+            }
+          </style>
+          <header><h1>Parsley State</h1></header>
+          <section class="middle">
+          	<p>problems:</p>
+          	<ul>
+          	<li>off-screen rendering conflicted with audio player</li>
+          	<li>pruning converted svg graphics to take less size</li>
+          	<li>including ahx file format required base conversion (binhexjs)</li>
+          	<li>closure exclude files for audio and canvas (and their hashes)</li>
+          	</ul>
+          </section>
+       </div>
+       
+        <div class="slide">
+          <header><h1>JSSpeccy</h1></header>
+          <section class="middle">
+          	<p><a href="https://github.com/gasman/jsspeccy2">https://github.com/gasman/jsspeccy2</a></p>
+          </section>
+       </div>
+
+       <div class="slide">
+          <header><h1>Parsley State</h1></header>
+          <section class="middle">
+          	<p>74k original.js</p>
+          	<p>33k closure.js</p>
+          	<p>10k pnginator.js</p>
+          </section>
+       </div>
+
+       <div class="slide" id="bsoptions">
+          <style>
+            #bsoptions li {
+              font-size: 26px;
+              line-height: 33px;
+              opacity: 0.85;
+            }
+        	#bsoptions h3 {
+              font-size: 26px;
+              line-height: 33px;
+            }
+          </style>
+          <header><h1>Benefits of Parsley</h1></header>
+          <section class="middle">
+          	<ul>
+          	<li>Parsley is an excellent breath freshener, eliminating strong mouth odours such as garlic or onion.</li>
+			<li>It cleanses and strengthens the kidney and can even help break up kidney stones.</li>
+			<li>Helps with bladder or urinary tract infections.</li>
+			<li>Parsley aids digestion and promotes a faster elimination of waste materials from the body.</li>
+			<li>It acts as an anti-inflammatory, reducing joint pain and stiffness.</li>
+          	</ul>
+          </section>
+       </div>
+
+       <div class="slide" id="ss">
+          <style>
+            #ss li {
+              font-size: 26px;
+              line-height: 33px;
+              opacity: 0.85;
+            }
+        	#ss h3 {
+              font-size: 26px;
+              line-height: 33px;
+            }
+          </style>
+          <header><h1>Benefits of Parsley</h1></header>
+          <section class="middle">
+          	<ul>
+          	<li>It boosts the immune system and protects against colds and infections.</li>
+			<li>It can help to protect the body against heart disease and cardiovascular disease.</li>
+			<li>Parsley can help with water retention, bloating, indigestion and flatulence.</li>
+			<li>Parsley aids the digestion of proteins and fats.</li>
+			<li>It is helpful in pregnancy and fertility.</li>
+			<li>The calcium and fluorine that is present in parsley can strengthen bones and teeth.</li>
+          	</ul>
+          </section>
+       </div>
+   
+       <div class="slide">
+          <header><h1>Becoming 1337</h1></header>
+          <section class="middle">
+          	<p>sci-fi web book game</p>
+          	<p><a href="http://www.tpolm.org/~ps/becoming_1337/">http://www.tpolm.org/~ps/becoming_1337/</a></p>
+          	<p><a href="https://github.com/psenough/becoming_1337">github</a></p>
+          </section>
+       </div>
+
+       <div class="slide">
+          <header><h1></h1></header>
+          <section class="middle">
+          	<p>Questions?</p>
+          </section>
+       </div>
+              
+      </div> <!-- slides -->
+      <style>
+      #speaker-note {
+        position:absolute;
+        left: 0;
+        top: 80%;
+        width: 100%;
+        height: 20%;
+        z-index: 50;
+        opacity: 0.75;
+        background-color: white;
+        overflow: auto;
+        padding: 2px 20px;
+        -webkit-transition: top 0.5s ease-in-out;
+        -moz-transition: top 0.5s ease-in-out;
+        -o-transition: top 0.5s ease-in-out;
+        transition: top 0.5s ease-in-out;
+      }
+      #speaker-note.invisible {
+        top: 101%;
+      }
+      </style>
+      <div id="speaker-note" class="invisible" style="display: none;">
+      </div> <!-- speaker note -->
+    </div> <!-- presentation -->
+
+    <script src="js/utils.js?20110607"></script>
+    
+  </body>
+
+</html>
