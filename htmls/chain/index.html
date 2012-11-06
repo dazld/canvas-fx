@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+<head>
+	<meta charset="UTF-8">
+	<title>Chain</title>
+	<style type="text/css">
+		body,html {
+			background: #333;
+		}
+		#frame {
+			margin: 0 auto;
+			margin-top: 24px;
+			width: 700px;
+			height: 550px;
+			border: 12px solid #ccc;
+		}
+		canvas {
+			background: #efefef;
+		}
+	</style>
+	<script type="text/javascript" src="../../lib/jquery.1.7.1-min.js"></script>
+	<script type="text/javascript" src="../../lib/vector2d.js"></script>
+	<script type="text/javascript" src="js/ball.js"></script>
+	<script type="text/javascript" src="js/game.js"></script>
+</head>
+<body>
+	<div id="frame">
+		
+		<canvas id="game" width="700" height="550"></canvas>
+	</div>
+	<div class="stats hidden">
+			<span class="score">1</span>
+		</div>
+	<script type="text/javascript">
+		Game.init();
+	</script>
+</body>
+</html>

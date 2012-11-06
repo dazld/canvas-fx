@@ -1,0 +1,47 @@
+@font-face {
+	font-family: 'nexa';
+	src: url('http://cookedfonts.com/sets/nexa/nexa_bold-webfont.eot');
+	src: url('http://cookedfonts.com/sets/nexa/nexa_bold-webfont.eot?#iefix') format('embedded-opentype'),
+	url('http://cookedfonts.com/sets/nexa/nexa_bold-webfont.woff') format('woff'),
+	url('http://cookedfonts.com/sets/nexa/nexa_bold-webfont.ttf') format('truetype'),
+	url('http://cookedfonts.com/sets/nexa/nexa_bold-webfont.svg#NexaBoldRegular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'nexa_light';
+	src: url('http://cookedfonts.com/sets/nexa/nexa_light-webfont.eot');
+	src: url('http://cookedfonts.com/sets/nexa/nexa_light-webfont.eot?#iefix') format('embedded-opentype'),
+	url('http://cookedfonts.com/sets/nexa/nexa_light-webfont.woff') format('woff'),
+	url('http://cookedfonts.com/sets/nexa/nexa_light-webfont.ttf') format('truetype'),
+	url('http://cookedfonts.com/sets/nexa/nexa_light-webfont.svg#NexaLightRegular') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+* {
+	padding: 0;
+	margin: 0;
+	font-weight: normal;
+}
+html {
+	background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAAECAYAAACp8Z5+AAAAIElEQVQIW2NcvXq1T2ho6BYGKGAE0ciCYAFkQbgATBAACPcOUhMnMIYAAAAASUVORK5CYII=);
+}
+body {
+	overflow: hidden;
+	font-family: "nexa_light";
+}
+
+#controls {
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+	text-align: right;
+}
+
+#controls input {
+	border: 1px solid #ccc;
+	width: 80%;
+	padding: 4px 8px;
+}

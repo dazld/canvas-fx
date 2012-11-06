@@ -1,0 +1,76 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:400,100,100italic,300,300italic,700,400italic,700italic,900,900italic);
+@import url(http://fonts.googleapis.com/css?family=Londrina+Shadow);
+body,html {
+	padding: 0;
+	margin: 0;
+	width:100%;
+	height: 100%;
+	overflow: hidden;
+}
+#frame {
+	width:100%;
+	height: 100%;
+	cursor:pointer;
+	background: rgb(255,255,255); /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 0%, rgba(173,173,173,1) 99%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,rgba(255,255,255,1)), color-stop(99%,rgba(173,173,173,1))); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 0%,rgba(173,173,173,1) 99%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 0%,rgba(173,173,173,1) 99%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  rgba(255,255,255,1) 0%,rgba(173,173,173,1) 99%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  rgba(255,255,255,1) 0%,rgba(173,173,173,1) 99%); /* W3C */
+}
+#paper {
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	position: absolute;
+	background: url(/static/images/square_bg.png) transparent;
+	pointer-events: none;
+}
+
+#score {
+	font-family: "Londrina Shadow",serif;
+	font-size: 42px;
+}
+
+.debug-block {
+	font-family: 'Droid Sans mono',monospace;
+	font-size: 10px;
+}
+
+.block {
+	position: absolute;
+	top: 5px;
+	left: 5px;
+	z-index: 10;
+}
+
+.arrows {
+	position: absolute;
+	bottom: 15px;
+	right: 15px;
+	z-index: 10;	
+	text-align: right;
+}
+
+.arrow {
+	float: right;
+	padding: 10px 12px;
+	border-radius: 4px;
+	margin: 4px;
+	background: rgba(128, 128, 128, 0.4);
+	color: #5a5a5a;
+	-webkit-transition: all 0.333s ease-in-out;
+}
+
+.arrow.active {
+	background: rgba(128, 128, 128, 0.9);
+	color: #efefef;
+}
+
+.arrow.up {
+	position: absolute;
+	bottom: 48px;
+	right: 44px;
+}
