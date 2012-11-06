@@ -1,0 +1,67 @@
+<html>
+ <head>
+  <script type="application/javascript">
+function drawCanvas() {
+
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var w = ctx.width = 300;
+	var h = ctx.height = 300;
+	
+	var it = 0;
+	
+	var r = [];
+	r[0] = Math.random();
+	r[1] = Math.random();
+	r[2] = Math.random();
+	r[3] = Math.random();
+	r[4] = Math.random();
+	r[5] = Math.random();
+	r[6] = Math.random();
+	r[7] = Math.random();
+	r[8] = Math.random();
+	r[9] = Math.random();
+		
+	var numq = 20;
+	var qc = [];
+	for (i=0; i<numq; i++) {
+		qc[i] = [];
+		qc[i][0] = (i/numq)*w; 
+		qc[i][1] = (i/numq)*h; 
+		qc[i][2] = qc[i][0]+(Math.cos(i*r[0])*30*r[1]-Math.sin(i*r[2])*30*r[3])*r[4]*10*((i%2)*2-1); 
+		qc[i][3] = qc[i][1]+(Math.cos(i*r[5])*30*r[6]+Math.sin(i*r[7])*30*r[8])*r[9]*10*((i%2)*2-1); 
+
+	}
+	
+	var qcl = qc.length;
+	
+	function drawThis() {
+		ctx.beginPath();  
+		ctx.moveTo(0,0);
+		var i = 0;
+		while(i<it && i<qcl) {
+			
+			ctx.quadraticCurveTo(qc[i][0],qc[i][1],qc[i][2],qc[i][3]);
+			/*ctx.quadraticCurveTo(25,25,25,62.5);  
+			ctx.quadraticCurveTo(25,100,50,100);  
+			ctx.quadraticCurveTo(50,120,30,125);  
+			ctx.quadraticCurveTo(60,120,65,100);  
+			ctx.quadraticCurveTo(125,100,125,62.5);  
+			ctx.quadraticCurveTo(125,25,75,25);*/
+			i++;
+		}
+		ctx.stroke();
+		it++;
+	}
+	
+	(loop = function() {
+		drawThis();
+		setTimeout(loop,200);
+	})()
+}
+  </script>
+ </head>
+ <body onload="drawCanvas()">
+   <canvas id="canvas" width="300" height="300"></canvas>
+ </body>
+</html>

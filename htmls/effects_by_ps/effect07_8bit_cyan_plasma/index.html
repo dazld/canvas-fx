@@ -1,0 +1,50 @@
+<html>
+ <head>
+  <script type="application/javascript">
+function drawCanvas() {
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	ctx.width = w = 500;
+	ctx.height = h = 500;
+	
+	function drawRectangle(){
+		var d = new Date();
+		var timer = d.getTime();
+		ctx.fillStyle = "rgb(0,0,200)";
+		ctx.fillRect(0,0,w,h);
+		var idata = ctx.getImageData(0,0,w,h);
+    	var data = idata.data;
+    	for(var x = 0; x < w; x++) {
+    	for(var y = 0; y < h; y++) {
+
+			i = (h*x+y)*4;
+			//var r = data[i];
+			//var g = data[i+1];
+			//var b = data[i+2];
+			//var brightness = (3*r+4*g+b)>>>3;
+			//data[i] = 255-(Math.sin(timer/1000+Math.sin((timer*(x+h*Math.sin(timer/1000)+h))*Math.PI/10000)+Math.cos(timer*(y+w)/10000))*64+104);
+			//data[i] = 255-(Math.sin(timer/1000+Math.sin((timer*(x+h*.5)*Math.PI/10000)+Math.cos(timer*(y+w)/10000))*64+104);
+			data[i] = 255-(Math.sin(timer/1000+Math.sin((timer*(x+h*Math.sin(timer/1000)+h)>>x)*Math.PI/10000)+Math.cos(timer*(y+w)/10000))*64<<3+104);
+			data[i+1] = 255;
+			data[i+2] = 255;
+			}
+    	}
+    	idata.data = data;
+    	ctx.putImageData(idata,0,0);
+	}
+	
+	
+	
+	(loop = function() {
+		ctx.clearRect(0,0,300,300);
+		drawRectangle();
+		setTimeout(loop,20);
+		//update every 20 miliseconds = 50 fps
+	})()
+}
+  </script>
+ </head>
+ <body onload="drawCanvas()">
+   <canvas id="canvas" style="width:100%; height: auto"></canvas>
+ </body>
+</html>
