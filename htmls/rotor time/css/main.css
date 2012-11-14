@@ -1,0 +1,116 @@
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Lato Regular'), local('Lato-Regular'), url('../fonts/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff') format('woff');
+}
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Lato Bold'), local('Lato-Bold'), url('../fonts/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff') format('woff');
+}
+@font-face {
+    font-family: 'Lato';
+    font-style: normal;
+    font-weight: 300;
+    src: local('Lato Light'), local('Lato-Light'), url('../fonts/kcf5uOXucLcbFOydGU24WALUuEpTyoUstqEm5AMlJo4.woff') format('woff');
+}
+
+html,body {
+    margin: 0;
+    padding:0;
+    font-family: 'Lato', serif;
+    background: black;
+    overflow: hidden;
+}
+#frame {
+    /*width: 500px;
+     height: 500px;
+     margin: 0 auto;
+     margin-top: 12px;
+     border: 2px solid #ccc;
+     padding: 12px;*/
+    width: 100%;
+    height: 100%;
+}
+@media only screen and (max-device-width: 480px), 
+    only screen and (-webkit-min-device-pixel-ratio: 2) {
+        h1 {
+            font-size: 24px !important;
+        }
+}
+
+
+#sand {
+    
+    
+    margin: 0 auto;
+}
+
+h1 {
+    font-size: 76px;
+    font-weight: 300;
+    position: absolute;
+    bottom: 30px;
+    right: 120px;
+    font-weight: 300;
+    color: #efefef;
+    text-shadow: 0 0 4px #333;
+    
+    
+    
+}
+.smalltext {
+    font-size: 10px;
+    line-height: 11px;
+    position: absolute;
+    right: 0;
+    top: 84px;
+    font-family: 'Arial',sans-serif;
+}
+
+a {
+    color: #cfcfcf;
+    text-decoration: none;
+}
+a:hover {
+    color: #afafaf;
+}
+.output:first-child {
+    border: 0;
+}
+#controls {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    width: 180px;
+    padding: 8px;
+    background: rgba(192,192,192,0.4);
+    font-size: 10px;
+}
+
+#controls label {
+    width: 40px;
+    padding-right: 10px;
+    color: white;
+    display: inline-block;
+}
+
+#controls input {
+    width: 120px;
+    border: 1px solid #ccc;
+    font-family: Lato;
+    font-size: 10px;
+}
+
+#controls  span {
+    padding-top: 8px;
+    display: inline-block;
+    width: 100%;
+    border-top:1px solid #fff;
+    cursor: pointer;
+}
+.hidden {
+    display: none;
+}
