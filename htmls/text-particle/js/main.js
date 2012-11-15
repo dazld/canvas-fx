@@ -177,8 +177,15 @@ define(function(require){
 		        var dvec = new vector2d(particle.destination.vx - particle.position.vx, particle.destination.vy - particle.position.vy);
 
 				var dist = dvec.normalize();
-				dvec.scale(Math.log(dist)*0.05);
+
+				var logDist = Math.log(dist);
+
+				dvec.scale(logDist*0.05);
 				particle.speed.add(dvec);
+
+				var size = logDist * 3;
+
+				size = size <= 3 ? 3 : size;
 
 
 
@@ -187,7 +194,7 @@ define(function(require){
 				particle.position.add(particle.speed);
 				particle.speed.scale(0.95);
 				context.fillStyle = particle.colour;
-				context.fillRect(particle.position.vx,particle.position.vy,3,3);
+				context.fillRect(particle.position.vx,particle.position.vy,size,size);
 
 		        // var x = particle.x,
 		        // 	y = particle.y,
